@@ -1,0 +1,9 @@
+{
+  "name": "MonoLog - Personal Collection OS",
+  "short_name": "MonoLog",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f4ef",
+  "theme_color": "#111111",
+  "description": "好きなモノの購入・所有・メンテナンス・思い出を管理するLocal-firstコレクションOS"
+}

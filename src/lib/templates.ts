@@ -1,0 +1,71 @@
+import type { CollectionTemplate } from '../types'
+
+export const collectionTemplates: CollectionTemplate[] = [
+  {
+    key: 'guitar',
+    name: 'ギター',
+    icon: '🎸',
+    description: '楽器本体・購入情報・弦交換・仕様を記録',
+    fields: [
+      { name: 'メーカー', type: 'text' },
+      { name: 'モデル', type: 'text' },
+      { name: '購入日', type: 'date' },
+      { name: '購入価格', type: 'money' },
+      { name: 'シリアル番号', type: 'text' },
+      { name: 'ピックアップ', type: 'text' },
+      { name: '最終弦交換日', type: 'date' },
+    ],
+  },
+  {
+    key: 'cycling',
+    name: '自転車',
+    icon: '🚲',
+    description: '車体・コンポ・走行距離・交換履歴のベース',
+    fields: [
+      { name: 'ブランド', type: 'text' },
+      { name: 'モデル', type: 'text' },
+      { name: 'フレームサイズ', type: 'text' },
+      { name: 'コンポーネント', type: 'text' },
+      { name: 'ホイール', type: 'text' },
+      { name: '走行距離', type: 'number' },
+      { name: '購入価格', type: 'money' },
+    ],
+  },
+  {
+    key: 'car',
+    name: 'クルマ',
+    icon: '🚗',
+    description: 'パーツ・整備・走行距離・費用を管理',
+    fields: [
+      { name: 'メーカー', type: 'text' },
+      { name: 'モデル', type: 'text' },
+      { name: '年式', type: 'number' },
+      { name: '走行距離', type: 'number' },
+      { name: '購入価格', type: 'money' },
+      { name: '最終オイル交換日', type: 'date' },
+    ],
+  },
+  {
+    key: 'computer',
+    name: 'PC・デバイス',
+    icon: '💻',
+    description: 'PCや周辺機器の構成・保証・購入額を記録',
+    fields: [
+      { name: 'メーカー', type: 'text' },
+      { name: 'モデル', type: 'text' },
+      { name: 'CPU', type: 'text' },
+      { name: 'GPU', type: 'text' },
+      { name: 'メモリ', type: 'text' },
+      { name: '購入日', type: 'date' },
+      { name: '購入価格', type: 'money' },
+      { name: '保証期限', type: 'date' },
+    ],
+  },
+  {
+    key: 'blank',
+    name: '自由コレクション',
+    icon: '📦',
+    description: '必要な項目を自分で追加する空のテンプレート',
+    fields: [],
+  },
+]
