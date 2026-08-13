@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ItemInputSchema, ITEM_KIND_LABELS, parseNullableRating, parseTags } from "./item-schema";
+import { BULK_ITEM_LIMIT, ItemInputSchema, ITEM_KIND_LABELS, parseBulkNames, parseNullableRating, parseTags } from "./item-schema";
 
 describe("ItemInputSchema", () => {
   it("accepts the complete MVP item shape", () => {
@@ -26,6 +26,17 @@ describe("ItemInputSchema", () => {
     });
 
     expect(result.success).toBe(false);
+  });
+});
+
+describe("bulk item parsing", () => {
+  it("trims lines and removes duplicate names within the submitted batch", () => {
+    expect(parseBulkNames(" First \n\nSecond\nFirst ")).toEqual({ names: ["First", "Second"], errors: [], duplicateCount: 1 });
+  });
+
+  it("reports names over the length limit and batches over the item limit", () => {
+    expect(parseBulkNames("x".repeat(161)).errors[0]).toEqual({ line: 1, message: "名称は160文字以内で入力してください" });
+    expect(parseBulkNames(Array.from({ length: BULK_ITEM_LIMIT + 1 }, (_, index) => `Item ${index}`).join("\n")).errors[0]?.message).toContain(String(BULK_ITEM_LIMIT));
   });
 });
 

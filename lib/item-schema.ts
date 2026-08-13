@@ -19,6 +19,15 @@ export const ItemRequestSchema = ItemInputSchema.extend({
   removeImage: z.boolean().optional().default(false),
 });
 
+export const BULK_ITEM_LIMIT = 50;
+
+export const BulkItemRequestSchema = z.object({
+  names: z.array(z.string()).min(1, "少なくとも1件の名称を入力してください").max(BULK_ITEM_LIMIT, `一度に登録できるのは${BULK_ITEM_LIMIT}件までです`),
+  kind: ItemKindSchema,
+  status: ItemStatusSchema,
+  tags: z.array(z.string().trim().min(1).max(40)).max(20),
+});
+
 export type ItemInput = z.infer<typeof ItemInputSchema>;
 export type ItemKind = z.infer<typeof ItemKindSchema>;
 export type ItemStatus = z.infer<typeof ItemStatusSchema>;
@@ -53,4 +62,38 @@ export function parseNullableRating(value: string): number | null {
   if (!value.trim()) return null;
   const rating = Number(value);
   return Number.isInteger(rating) ? rating : null;
+}
+
+export type BulkNameParseResult = {
+  names: string[];
+  errors: Array<{ line: number; message: string }>;
+  duplicateCount: number;
+};
+
+export function parseBulkNames(value: string): BulkNameParseResult {
+  const names: string[] = [];
+  const errors: Array<{ line: number; message: string }> = [];
+  const seen = new Set<string>();
+  let duplicateCount = 0;
+
+  value.split(/\r?\n/).forEach((rawName, index) => {
+    const name = rawName.trim();
+    if (!name) return;
+    if (name.length > 160) {
+      errors.push({ line: index + 1, message: "名称は160文字以内で入力してください" });
+      return;
+    }
+    if (seen.has(name)) {
+      duplicateCount += 1;
+      return;
+    }
+    seen.add(name);
+    names.push(name);
+  });
+
+  if (names.length > BULK_ITEM_LIMIT) {
+    errors.push({ line: 0, message: `一度に登録できるのは${BULK_ITEM_LIMIT}件までです` });
+  }
+
+  return { names, errors, duplicateCount };
 }

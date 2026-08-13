@@ -22,3 +22,7 @@ export type ItemsResponse = {
   total: number;
   totalPages: number;
 };
+
+export type BulkItemsResponse = {
+  count: number;
+};
