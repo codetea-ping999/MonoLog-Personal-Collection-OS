@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ItemKindSchema, ItemStatusSchema } from "@/lib/item-schema";
+import { BulkItemRequestSchema, ItemKindSchema, ItemStatusSchema, parseBulkNames, parseTags } from "@/lib/item-schema";
 import {
   apiError,
   escapeIlike,
@@ -93,4 +93,36 @@ export async function POST(request: NextRequest) {
 
   const [serialized] = await serializeItems(context.supabase, [savedItem] as never[] as Parameters<typeof serializeItems>[1]);
   return NextResponse.json({ item: serialized }, { status: 201 });
+}
+
+export async function PUT(request: NextRequest) {
+  const context = await getAuthenticatedContext();
+  if (!context) return apiError("ログインが必要です", 401);
+
+  let payload: Record<string, unknown>;
+  try {
+    payload = (await request.json()) as Record<string, unknown>;
+  } catch {
+    return apiError("JSONリクエストを読み取れませんでした");
+  }
+
+  const parsedNames = parseBulkNames(Array.isArray(payload.names) ? payload.names.join("\n") : "");
+  if (parsedNames.errors.length > 0) return apiError("入力内容を確認してください", 400, parsedNames.errors);
+
+  const parsed = BulkItemRequestSchema.safeParse({
+    names: parsedNames.names,
+    kind: payload.kind,
+    status: payload.status,
+    tags: Array.isArray(payload.tags) ? payload.tags : typeof payload.tags === "string" ? parseTags(payload.tags) : payload.tags,
+  });
+  if (!parsed.success) {
+    return apiError("入力内容を確認してください", 400, parsed.error.issues.map((issue) => ({ path: issue.path.map(String), message: issue.message })));
+  }
+
+  const { names, kind, status, tags } = parsed.data;
+  const { error } = await context.supabase.from("items").insert(
+    names.map((name) => ({ user_id: context.userId, name, kind, status, tags, rating: null, note: "" })),
+  );
+  if (error) return apiError("アイテムを一括登録できませんでした", 500);
+  return NextResponse.json({ count: names.length }, { status: 201 });
 }
