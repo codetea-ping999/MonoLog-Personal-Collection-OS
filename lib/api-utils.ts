@@ -91,3 +91,22 @@ export async function removeItemImage(
 export function escapeIlike(value: string) {
   return value.replace(/[\\%_(),*]/g, " ").trim();
 }
+
+export function validationDetails(error: { issues: Array<{ path: PropertyKey[]; message: string }> }) {
+  return error.issues.map((issue) => ({ path: issue.path.map(String), message: issue.message }));
+}
+
+export async function readJsonObject(request: Request): Promise<Record<string, unknown> | null> {
+  try {
+    const payload: unknown = await request.json();
+    return payload && typeof payload === "object" && !Array.isArray(payload) ? (payload as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export function isUuid(value: string) {
+  return UUID_PATTERN.test(value);
+}

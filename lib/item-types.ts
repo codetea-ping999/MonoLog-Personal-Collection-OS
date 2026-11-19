@@ -26,3 +26,13 @@ export type ItemsResponse = {
 export type BulkItemsResponse = {
   count: number;
 };
+
+export type MaintenanceAlert = {
+  itemId: string;
+  name: string;
+  status: "overdue" | "due_soon";
+  nextDueOn: string | null;
+  nextDueUsage: number | null;
+  latestUsage: number | null;
+  daysUntilDue: number | null;
+};
