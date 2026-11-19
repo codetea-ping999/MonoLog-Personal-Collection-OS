@@ -49,6 +49,7 @@ export async function parseItemRequest(request: Request): Promise<ParseResult> {
       rating: parseNullableRating(String(formData.get("rating") ?? "")),
       note: String(formData.get("note") ?? ""),
       wish_price_yen: parseNullableNumber(formData.get("wish_price_yen") ?? null),
+      current_value_yen: parseNullableNumber(formData.get("current_value_yen") ?? null),
       source_url: nullableText(formData.get("source_url")),
       priority: nullablePriority(formData.get("priority")),
     });
@@ -79,6 +80,7 @@ export async function parseItemRequest(request: Request): Promise<ParseResult> {
     rating: payload.rating === "" || payload.rating === undefined ? null : payload.rating,
     note: payload.note,
     wish_price_yen: parseNullableNumber(payload.wish_price_yen),
+    current_value_yen: parseNullableNumber(payload.current_value_yen),
     source_url: nullableText(payload.source_url),
     priority: nullablePriority(payload.priority),
     removeImage: payload.removeImage,

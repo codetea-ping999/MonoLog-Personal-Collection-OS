@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Archive, ArrowDownUp, ChevronLeft, ChevronRight, CirclePlus, Filter, LoaderCircle, PackageOpen, Search, SlidersHorizontal, X } from "lucide-react";
+import { Archive, ArrowDownUp, BarChart3, ChevronLeft, ChevronRight, CirclePlus, Filter, LoaderCircle, PackageOpen, Search, SlidersHorizontal, X } from "lucide-react";
 import { ITEM_KIND_LABELS, ITEM_STATUS_LABELS, ITEM_KINDS, ITEM_STATUSES, type ItemKind, type ItemStatus } from "@/lib/item-schema";
 import type { CollectionItemView, ItemsResponse } from "@/lib/item-types";
 import { SignOutButton } from "@/components/sign-out-button";
@@ -66,7 +66,7 @@ export function CollectionDashboard({ userEmail }: { userEmail: string }) {
 
   const hasFilters = Boolean(q || kind || status || tag);
 
-  return <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12"><div className="mx-auto max-w-[1440px]"><header className="flex items-center justify-between gap-4"><Link href="/" className="focus-ring flex items-center gap-3 text-sm font-black tracking-[0.18em] text-[var(--forest)]"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-[var(--forest)] text-[var(--mint)]"><PackageOpen size={19} /></span><span className="hidden sm:inline">MONOLOG</span></Link><div className="flex items-center gap-2"><span className="hidden text-xs text-[var(--muted)] sm:inline">{userEmail}</span><SignOutButton /></div></header>
+  return <main className="min-h-screen px-5 py-6 sm:px-8 lg:px-12"><div className="mx-auto max-w-[1440px]"><header className="flex items-center justify-between gap-4"><Link href="/" className="focus-ring flex items-center gap-3 text-sm font-black tracking-[0.18em] text-[var(--forest)]"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-[var(--forest)] text-[var(--mint)]"><PackageOpen size={19} /></span><span className="hidden sm:inline">MONOLOG</span></Link><div className="flex items-center gap-2"><Link href="/analytics" className="focus-ring inline-flex items-center gap-1.5 rounded-xl border border-[var(--line)] bg-white px-3 py-2 text-xs font-bold text-[var(--forest)] hover:border-[#bdd2ca]"><BarChart3 size={14} /> 分析</Link><span className="hidden text-xs text-[var(--muted)] sm:inline">{userEmail}</span><SignOutButton /></div></header>
 
 <section className="pb-7 pt-16 sm:pb-9 sm:pt-24"><div className="flex flex-col justify-between gap-7 lg:flex-row lg:items-end"><div><p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-[var(--coral)]">Your personal archive</p><h1 className="text-4xl font-semibold tracking-[-0.06em] text-[var(--forest)] sm:text-6xl">集めたものを、<br className="sm:hidden" />見つけやすく。</h1><p className="mt-5 max-w-xl text-sm leading-7 text-[var(--muted)]">あなたのコレクションを、あなたのペースで。記録して、眺めて、また出会う。</p></div><div className="flex w-fit flex-wrap gap-2"><Link href="/items/bulk" className="focus-ring inline-flex items-center gap-2 rounded-2xl border border-[var(--line)] bg-white px-4 py-3.5 text-sm font-bold text-[var(--forest)] transition hover:border-[#bdd2ca]"><CirclePlus size={18} /> まとめて追加</Link><Link href="/items/new" className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-[var(--coral)] px-5 py-3.5 text-sm font-bold text-white shadow-[0_10px_24px_rgba(230,122,96,0.24)] transition hover:-translate-y-0.5 hover:bg-[#d96d53]"><CirclePlus size={18} /> アイテムを追加</Link></div></div></section>
 

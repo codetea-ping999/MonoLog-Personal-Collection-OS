@@ -10,7 +10,7 @@ export const ITEM_PRIORITIES = [1, 2, 3] as const;
 export const ITEM_PRIORITY_LABELS: Record<(typeof ITEM_PRIORITIES)[number], string> = { 1: "高", 2: "中", 3: "低" };
 
 export const ITEM_COLUMNS =
-  "id,user_id,name,kind,status,tags,rating,note,image_path,wish_price_yen,source_url,priority,created_at,updated_at";
+  "id,user_id,name,kind,status,tags,rating,note,image_path,wish_price_yen,source_url,priority,current_value_yen,created_at,updated_at";
 
 export const SourceUrlSchema = z
   .string()
@@ -34,6 +34,7 @@ export const ItemInputSchema = z.object({
   note: z.string().max(5000, "メモは5000文字以内で入力してください"),
   wish_price_yen: z.number({ error: "候補価格は数値で入力してください" }).int("候補価格は円単位の整数で入力してください").min(0, "候補価格は0以上で入力してください").max(1_000_000_000_000, "候補価格が大きすぎます").nullable().default(null),
   source_url: SourceUrlSchema.nullable().default(null),
+  current_value_yen: z.number({ error: "評価額は数値で入力してください" }).int("評価額は円単位の整数で入力してください").min(0, "評価額は0以上で入力してください").max(1_000_000_000_000, "評価額が大きすぎます").nullable().default(null),
   priority: z.union([z.literal(1), z.literal(2), z.literal(3)], { error: "優先度は高・中・低から選んでください" }).nullable().default(null),
 });
 
