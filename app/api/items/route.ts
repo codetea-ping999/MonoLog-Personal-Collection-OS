@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { BulkItemRequestSchema, ItemKindSchema, ItemStatusSchema, parseBulkNames, parseTags } from "@/lib/item-schema";
+import { BulkItemRequestSchema, ITEM_COLUMNS, ItemKindSchema, ItemStatusSchema, parseBulkNames, parseTags } from "@/lib/item-schema";
 import {
   apiError,
   escapeIlike,
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 
   let query = context.supabase
     .from("items")
-    .select("id,user_id,name,kind,status,tags,rating,note,image_path,created_at,updated_at", { count: "exact" })
+    .select(ITEM_COLUMNS, { count: "exact" })
     .eq("user_id", context.userId);
 
   if (search) query = query.or(`name.ilike.%${search}%,note.ilike.%${search}%`);
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
   const { data: item, error } = await context.supabase
     .from("items")
     .insert({ user_id: context.userId, ...input })
-    .select("id,user_id,name,kind,status,tags,rating,note,image_path,created_at,updated_at")
+    .select(ITEM_COLUMNS)
     .single();
   if (error || !item) return apiError("アイテムを登録できませんでした", 500);
 
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         .from("items")
         .update({ image_path: imagePath })
         .eq("id", item.id)
-        .select("id,user_id,name,kind,status,tags,rating,note,image_path,created_at,updated_at")
+        .select(ITEM_COLUMNS)
         .single();
       if (updateError || !updated) throw updateError ?? new Error("画像パスを保存できませんでした");
       savedItem = updated;

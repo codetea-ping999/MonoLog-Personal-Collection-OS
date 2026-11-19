@@ -14,6 +14,9 @@ export type Database = {
           rating: number | null;
           note: string;
           image_path: string | null;
+          wish_price_yen: number | null;
+          source_url: string | null;
+          priority: number | null;
           created_at: string;
           updated_at: string;
         };
@@ -27,6 +30,9 @@ export type Database = {
           rating?: number | null;
           note?: string;
           image_path?: string | null;
+          wish_price_yen?: number | null;
+          source_url?: string | null;
+          priority?: number | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -40,6 +46,9 @@ export type Database = {
           rating?: number | null;
           note?: string;
           image_path?: string | null;
+          wish_price_yen?: number | null;
+          source_url?: string | null;
+          priority?: number | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -103,7 +112,19 @@ export type Database = {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      record_item_transition: {
+        Args: {
+          p_item_id: string;
+          p_type: "purchase" | "sale" | "disposal" | "maintenance" | "use" | "modification" | "note";
+          p_occurred_on: string;
+          p_title: string;
+          p_amount_yen?: number | null;
+          p_note?: string;
+        };
+        Returns: string;
+      };
+    };
     Enums: {
       item_kind: "book" | "movie" | "music" | "game" | "other";
       item_status: "owned" | "wishlist" | "borrowed" | "archived";
