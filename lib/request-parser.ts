@@ -1,5 +1,17 @@
 import { ItemInputSchema, ItemRequestSchema, parseNullableRating, parseTags, type ItemInput } from "@/lib/item-schema";
 import { validateImage } from "@/lib/api-utils";
+import { parseNullableNumber } from "@/lib/event-schema";
+
+function nullableText(value: unknown) {
+  if (value === null || value === undefined) return null;
+  if (typeof value !== "string") return value;
+  return value.trim() ? value.trim() : null;
+}
+
+function nullablePriority(value: unknown) {
+  if (value === null || value === undefined || value === "") return null;
+  return typeof value === "string" ? Number(value) : value;
+}
 
 type ParsedItemRequest = {
   input: ItemInput;
@@ -36,6 +48,9 @@ export async function parseItemRequest(request: Request): Promise<ParseResult> {
       tags: parseTags(String(formData.get("tags") ?? "")),
       rating: parseNullableRating(String(formData.get("rating") ?? "")),
       note: String(formData.get("note") ?? ""),
+      wish_price_yen: parseNullableNumber(formData.get("wish_price_yen") ?? null),
+      source_url: nullableText(formData.get("source_url")),
+      priority: nullablePriority(formData.get("priority")),
     });
     if (!parsed.success) return validationFailure(parsed.error);
 
@@ -63,6 +78,9 @@ export async function parseItemRequest(request: Request): Promise<ParseResult> {
     tags: Array.isArray(payload.tags) ? payload.tags : typeof payload.tags === "string" ? parseTags(payload.tags) : payload.tags,
     rating: payload.rating === "" || payload.rating === undefined ? null : payload.rating,
     note: payload.note,
+    wish_price_yen: parseNullableNumber(payload.wish_price_yen),
+    source_url: nullableText(payload.source_url),
+    priority: nullablePriority(payload.priority),
     removeImage: payload.removeImage,
   });
   if (!parsed.success) return validationFailure(parsed.error);

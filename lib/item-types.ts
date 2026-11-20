@@ -10,6 +10,9 @@ export type CollectionItemView = {
   rating: number | null;
   note: string;
   image_path: string | null;
+  wish_price_yen: number | null;
+  source_url: string | null;
+  priority: 1 | 2 | 3 | null;
   imageUrl: string | null;
   created_at: string;
   updated_at: string;

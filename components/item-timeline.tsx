@@ -53,7 +53,7 @@ export function MaintenanceBadge({ state }: { state: MaintenanceState }) {
   return <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${tone}`}><CalendarClock size={14} /> {label}{parts.length > 0 && `：${parts.join(" / ")}`}</span>;
 }
 
-export function ItemTimeline({ itemId }: { itemId: string }) {
+export function ItemTimeline({ itemId, refreshKey = 0 }: { itemId: string; refreshKey?: number }) {
   const [events, setEvents] = useState<ItemEvent[]>([]);
   const [maintenance, setMaintenance] = useState<MaintenanceState | null>(null);
   const [loading, setLoading] = useState(true);
@@ -83,7 +83,7 @@ export function ItemTimeline({ itemId }: { itemId: string }) {
     }
     void load();
     return () => controller.abort();
-  }, [itemId, version]);
+  }, [itemId, version, refreshKey]);
 
   function update<K extends keyof Draft>(key: K, value: Draft[K]) {
     setDraft((current) => (current ? { ...current, [key]: value } : current));

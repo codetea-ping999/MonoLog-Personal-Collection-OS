@@ -158,3 +158,32 @@ export function todayInTokyo(now = new Date()) {
 export function formatYen(value: number | null) {
   return value === null ? "—" : `¥${value.toLocaleString("ja-JP")}`;
 }
+
+export const TRANSITION_TYPES = ["purchase", "sale", "disposal"] as const;
+export type TransitionType = (typeof TRANSITION_TYPES)[number];
+
+export const TRANSITION_DEFAULT_TITLES: Record<TransitionType, string> = {
+  purchase: "購入",
+  sale: "売却",
+  disposal: "処分",
+};
+
+export const ItemTransitionInputSchema = z.object({
+  type: z.enum(TRANSITION_TYPES, { error: "購入・売却・処分のいずれかを選んでください" }),
+  occurred_on: IsoDateSchema,
+  title: z.string().trim().max(160, "タイトルは160文字以内で入力してください"),
+  amount_yen: z.number({ error: "金額は数値で入力してください" }).int("金額は円単位の整数で入力してください").min(0, "金額は0以上で入力してください").max(1_000_000_000_000, "金額が大きすぎます").nullable(),
+  note: z.string().max(5000, "メモは5000文字以内で入力してください"),
+});
+
+export function parseItemTransitionPayload(payload: Record<string, unknown>) {
+  const parsed = ItemTransitionInputSchema.safeParse({
+    type: payload.type,
+    occurred_on: payload.occurred_on,
+    title: typeof payload.title === "string" ? payload.title : "",
+    amount_yen: parseNullableNumber(payload.amount_yen),
+    note: payload.note ?? "",
+  });
+  if (!parsed.success) return parsed;
+  return { ...parsed, data: { ...parsed.data, title: parsed.data.title || TRANSITION_DEFAULT_TITLES[parsed.data.type] } };
+}

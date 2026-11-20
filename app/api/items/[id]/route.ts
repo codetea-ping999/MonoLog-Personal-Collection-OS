@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ITEM_COLUMNS } from "@/lib/item-schema";
 import { apiError, getAuthenticatedContext, removeItemImage, serializeItems, uploadItemImage } from "@/lib/api-utils";
 import { parseItemRequest } from "@/lib/request-parser";
 
@@ -10,7 +11,7 @@ async function getItem(request: NextRequest, id: string) {
 
   const { data: item, error } = await context.supabase
     .from("items")
-    .select("id,user_id,name,kind,status,tags,rating,note,image_path,created_at,updated_at")
+    .select(ITEM_COLUMNS)
     .eq("id", id)
     .eq("user_id", context.userId)
     .maybeSingle();
@@ -55,7 +56,7 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
     .update({ ...input, image_path: imagePath })
     .eq("id", id)
     .eq("user_id", result.context.userId)
-    .select("id,user_id,name,kind,status,tags,rating,note,image_path,created_at,updated_at")
+    .select(ITEM_COLUMNS)
     .single();
   if (error || !updated) {
     if (uploadedImagePath) await removeItemImage(result.context.supabase, uploadedImagePath);
