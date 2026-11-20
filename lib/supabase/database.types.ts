@@ -45,12 +45,69 @@ export type Database = {
         };
         Relationships: [];
       };
+      item_events: {
+        Row: {
+          id: string;
+          user_id: string;
+          item_id: string;
+          type: "purchase" | "sale" | "disposal" | "maintenance" | "use" | "modification" | "note";
+          occurred_on: string;
+          title: string;
+          note: string;
+          amount_yen: number | null;
+          usage_reading: number | null;
+          next_due_on: string | null;
+          next_due_usage: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          item_id: string;
+          type: "purchase" | "sale" | "disposal" | "maintenance" | "use" | "modification" | "note";
+          occurred_on?: string;
+          title: string;
+          note?: string;
+          amount_yen?: number | null;
+          usage_reading?: number | null;
+          next_due_on?: string | null;
+          next_due_usage?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          item_id?: string;
+          type?: "purchase" | "sale" | "disposal" | "maintenance" | "use" | "modification" | "note";
+          occurred_on?: string;
+          title?: string;
+          note?: string;
+          amount_yen?: number | null;
+          usage_reading?: number | null;
+          next_due_on?: string | null;
+          next_due_usage?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "item_events_item_owner_fkey";
+            columns: ["item_id", "user_id"];
+            isOneToOne: false;
+            referencedRelation: "items";
+            referencedColumns: ["id", "user_id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
     Enums: {
       item_kind: "book" | "movie" | "music" | "game" | "other";
       item_status: "owned" | "wishlist" | "borrowed" | "archived";
+      item_event_type: "purchase" | "sale" | "disposal" | "maintenance" | "use" | "modification" | "note";
     };
     CompositeTypes: Record<string, never>;
   };
