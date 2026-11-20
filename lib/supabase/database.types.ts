@@ -17,6 +17,7 @@ export type Database = {
           wish_price_yen: number | null;
           source_url: string | null;
           priority: number | null;
+          current_value_yen: number | null;
           created_at: string;
           updated_at: string;
         };
@@ -33,6 +34,7 @@ export type Database = {
           wish_price_yen?: number | null;
           source_url?: string | null;
           priority?: number | null;
+          current_value_yen?: number | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -49,6 +51,7 @@ export type Database = {
           wish_price_yen?: number | null;
           source_url?: string | null;
           priority?: number | null;
+          current_value_yen?: number | null;
           created_at?: string;
           updated_at?: string;
         };

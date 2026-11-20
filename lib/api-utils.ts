@@ -30,6 +30,7 @@ export type CollectionItem = {
   wish_price_yen: number | null;
   source_url: string | null;
   priority: 1 | 2 | 3 | null;
+  current_value_yen: number | null;
   created_at: string;
   updated_at: string;
 };
