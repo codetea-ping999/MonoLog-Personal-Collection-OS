@@ -19,6 +19,14 @@ describe("buildProposals", () => {
     expect(defaultAccepted(proposals)).toEqual({ name: false, kind: false, tags: false, note: false });
   });
 
+  it("re-evaluated against newer input, a once-empty field becomes a replacing proposal with the new current value", () => {
+    const suggestion = { name: "Abbey Road" };
+    const before = buildProposals(suggestion, empty)[0];
+    const after = buildProposals(suggestion, { ...empty, name: "typed meanwhile" })[0];
+    expect(before).toMatchObject({ current: "", replaces: false });
+    expect(after).toMatchObject({ current: "typed meanwhile", replaces: true });
+  });
+
   it("drops proposals equal to the current value and produces none for an empty suggestion", () => {
     expect(buildProposals({ name: "Same" }, { ...empty, name: "Same" })).toEqual([]);
     expect(buildProposals({}, empty)).toEqual([]);
